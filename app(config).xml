@@ -1,0 +1,136 @@
+<?xml version="1.0"?>
+<configuration>
+
+  <configSections>
+  </configSections>
+  <connectionStrings>
+    <add name="Drumbi.Properties.Settings.DrumbiConnectionString"
+      connectionString="Data Source=216.34.250.160;Initial Catalog=DrumbiV2;Persist Security Info=True;User ID=sa;Password=Passw0rd3"
+      providerName="System.Data.SqlClient" />
+  </connectionStrings>
+
+  <system.web>
+    <compilation debug="true"></compilation>
+
+    <membership defaultProvider="ClientAuthenticationMembershipProvider">
+      <providers>
+        <add name="ClientAuthenticationMembershipProvider" type="System.Web.ClientServices.Providers.ClientFormsAuthenticationMembershipProvider, System.Web.Extensions, Version=4.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35" serviceUri="" />
+      </providers>
+    </membership>
+
+    <roleManager defaultProvider="ClientRoleProvider" enabled="true">
+      <providers>
+        <add name="ClientRoleProvider" type="System.Web.ClientServices.Providers.ClientRoleProvider, System.Web.Extensions, Version=4.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35" serviceUri="" cacheTimeout="86400" />
+      </providers>
+    </roleManager>
+
+    <httpRuntime maxRequestLength="2147483647"/>
+
+  </system.web>
+
+  <system.serviceModel>
+    <serviceHostingEnvironment aspNetCompatibilityEnabled="true"></serviceHostingEnvironment>
+    <diagnostics wmiProviderEnabled="true">
+      <messageLogging logMalformedMessages="true" logMessagesAtTransportLevel="true" />
+    </diagnostics>
+    <bindings>
+
+      <basicHttpBinding>
+        <binding name="basicBindingForBigArrays"
+            closeTimeout="00:30:00"
+            openTimeout="00:30:00"
+            receiveTimeout="Infinite"
+            sendTimeout="00:30:00"
+            maxBufferSize="2147483647"
+            maxBufferPoolSize="2147483647"
+            maxReceivedMessageSize="2147483647"
+            messageEncoding="Mtom">
+          <readerQuotas
+            maxDepth="2147483647"
+            maxStringContentLength="2147483647"
+            maxArrayLength="2147483647"
+            maxBytesPerRead="2147483647"
+            maxNameTableCharCount="2147483647" />
+        </binding>
+      </basicHttpBinding>
+
+      <webHttpBinding>
+        <binding name="webHttpBindingConfig"
+            closeTimeout="00:30:00"
+            openTimeout="00:30:00"
+            receiveTimeout="Infinite"
+            sendTimeout="00:30:00"
+            maxBufferSize="2147483647"
+            maxBufferPoolSize="2147483647"
+            maxReceivedMessageSize="2147483647"
+            useDefaultWebProxy="true"
+            transferMode="StreamedRequest">
+          <readerQuotas
+            maxDepth="2147483647"
+            maxStringContentLength="2147483647"
+            maxArrayLength="2147483646"
+            maxBytesPerRead="2147483647"
+            maxNameTableCharCount="2147483647"/>
+        </binding>
+
+      </webHttpBinding>
+
+    </bindings>
+
+    <behaviors>
+
+      <endpointBehaviors>
+        <behavior name="restBehavior">
+          <enableWebScript/>
+        </behavior>
+      </endpointBehaviors>
+
+      <serviceBehaviors>
+        <behavior name="DrumbiServiceBehavior">
+          <!-- To avoid disclosing metadata information, 
+          set the value below to false and remove the metadata endpoint above before deployment -->
+          <!--<serviceMetadata httpGetEnabled="true" httpsGetEnabled="true" />-->
+          <serviceMetadata httpGetEnabled="true"/>
+          <!-- To receive exception details in faults for debugging purposes, 
+          set the value below to true.  Set to false before deployment 
+          to avoid disclosing exception information -->
+          <serviceDebug includeExceptionDetailInFaults="False" />
+          <serviceThrottling
+            maxConcurrentCalls="200"
+            maxConcurrentInstances="200"
+            maxConcurrentSessions="200" />
+        </behavior>
+      </serviceBehaviors>
+    </behaviors>
+
+    <services>
+      <service behaviorConfiguration="DrumbiServiceBehavior" name="Drumbi.DrumbiService">
+
+        <endpoint address="basic" binding="basicHttpBinding" bindingConfiguration="basicBindingForBigArrays"
+          name="basicHttp" contract="Drumbi.IDrumbiService">
+
+        </endpoint>
+
+        <endpoint address="mex" binding="mexHttpBinding" name="MetaDataExchange"
+          contract="IMetadataExchange">
+        </endpoint>
+
+        <endpoint address="rest" behaviorConfiguration="restBehavior"
+          binding="webHttpBinding" bindingConfiguration="webHttpBindingConfig"
+          name="webHttp" contract="Drumbi.IDrumbiService">
+
+        </endpoint>
+        <host>
+          <baseAddresses>
+            <add baseAddress="http://localhost/drumbiservice" />
+          </baseAddresses>
+        </host>
+      </service>
+    </services>
+  </system.serviceModel>
+  
+  <startup>
+    <supportedRuntime version="v4.0" sku=".NETFramework,Version=v4.0"/>
+  </startup>
+
+</configuration> 
