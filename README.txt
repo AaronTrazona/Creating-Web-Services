@@ -44,4 +44,15 @@ Connect the Website Project and the IIS Setup.
 5.)Fill in the alias text box what you want, In Physical Path click the browse then find the Website Project that you make and Select the Folder of the Website Project.
 6.)Then now, we try to access the service.. http://localhost/examplewebservice/service.svc/help 
 
+Lets try to Request.
+
+this Request needs SQL database before you request .
+http://10.1.2.214/example/Service.svc/GetAccount?firstname=aaron
+
+local Request.
+http://dna-jan-2008.cebu.vonata.local/example/Service.svc/GetCurrentTime
+{
+    "response": "7/17/2012 5:40:17 PM"
+}
+
 
